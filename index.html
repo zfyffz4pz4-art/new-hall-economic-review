@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The New Hall Economic Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#FFFFFF',
+                        surface: '#F7F7F7',
+                        ink: '#121212',
+                        crimson: '#E3120B',
+                        'crimson-dark': '#B80E08',
+                        rule: '#D9D9D9',
+                        muted: '#595959'
+                    },
+                    fontFamily: {
+                        editorial: ['"Times New Roman"', 'Times', 'Georgia', 'serif'],
+                        sans: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Strict Marber Editorial System: 0px radii, no shadows, no gradients */
+        *, *::before, *::after {
+            border-radius: 0px !important;
+            box-shadow: none !important;
+            background-image: none !important;
+        }
+        body {
+            background-color: #FFFFFF;
+            color: #121212;
+            font-family: 'Times New Roman', Times, Georgia, serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* The Economist exact body prose weight, width, and line rhythm */
+        .economist-prose p {
+            font-family: 'Times New Roman', Times, Georgia, serif;
+            font-size: 20.5px;
+            font-weight: 400;
+            line-height: 1.62;
+            letter-spacing: -0.002em;
+            word-spacing: 0.015em;
+            color: #121212;
+            -webkit-text-stroke: 0.4px #121212;
+        }
+        .economist-prose p strong,
+        .economist-prose p b {
+            font-weight: 400 !important;
+        }
+        .economist-prose p.lead-dropcap::first-letter {
+            float: left;
+            font-family: 'Times New Roman', Times, Georgia, serif;
+            font-size: 3.7rem;
+            line-height: 0.84;
+            padding-top: 4px;
+            padding-right: 10px;
+            padding-bottom: 2px;
+            font-weight: 700;
+            -webkit-text-stroke: 0px;
+            color: #121212;
+        }
+        /* Long form explainers & flashcards exact Economist typography */
+        .economist-explainer {
+            font-family: 'Times New Roman', Times, Georgia, serif;
+            font-size: 17.5px;
+            line-height: 1.58;
+            letter-spacing: -0.002em;
+            word-spacing: 0.012em;
+            color: #121212;
+            -webkit-text-stroke: 0.25px #121212;
+        }
+        .economist-question {
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
+            font-size: 18.5px;
+            line-height: 1.55;
+            color: #121212;
+        }
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F7F7F7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D9D9D9;
+        }
+    </style>
+</head>
+<body class="bg-paper text-ink selection:bg-crimson selection:text-white">
+
+    <!-- 1. FT-PROPORTIONED TOP INDEX BAR (Cleanly Spaced, No Pipe Dividers, Restrained Palette) -->
+    <div id="top" class="bg-surface text-ink border-b border-rule">
+        <div class="max-w-4xl mx-auto px-3 sm:px-5 py-2.5 font-sans text-[11px] sm:text-[12px]">
+            <div class="flex flex-wrap items-center justify-center gap-x-7 sm:gap-x-12 gap-y-1.5 text-center">
+                <div class="inline-flex items-center gap-1.5">
+                    <span class="font-semibold text-ink">Bank Rate</span>
+                    <span class="text-muted">4.00% (+0.25)</span>
+                    <button onclick="openIndicatorExplainer('bank-rate')" aria-label="Explain Bank Rate"
+                        class="w-3.5 h-3.5 border border-rule bg-white text-[9px] font-bold text-ink hover:border-crimson hover:text-crimson inline-flex items-center justify-center transition cursor-pointer">?</button>
+                </div>
+                <div class="inline-flex items-center gap-1.5">
+                    <span class="font-semibold text-ink">UK CPI</span>
+                    <span class="text-muted">3.50% (+1.5pp)</span>
+                    <button onclick="openIndicatorExplainer('cpi')" aria-label="Explain UK CPI"
+                        class="w-3.5 h-3.5 border border-rule bg-white text-[9px] font-bold text-ink hover:border-crimson hover:text-crimson inline-flex items-center justify-center transition cursor-pointer">?</button>
+                </div>
+                <div class="inline-flex items-center gap-1.5">
+                    <span class="font-semibold text-ink">10Y Gilt Yield</span>
+                    <span class="text-muted">5.00% (+0.18)</span>
+                    <button onclick="openIndicatorExplainer('gilt')" aria-label="Explain 10Y Gilt Yield"
+                        class="w-3.5 h-3.5 border border-rule bg-white text-[9px] font-bold text-ink hover:border-crimson hover:text-crimson inline-flex items-center justify-center transition cursor-pointer">?</button>
+                </div>
+                <div class="inline-flex items-center gap-1.5">
+                    <span class="font-semibold text-ink">UK Real GDP</span>
+                    <span class="text-muted">+1.10%</span>
+                    <button onclick="openIndicatorExplainer('gdp')" aria-label="Explain UK Real GDP"
+                        class="w-3.5 h-3.5 border border-rule bg-white text-[9px] font-bold text-ink hover:border-crimson hover:text-crimson inline-flex items-center justify-center transition cursor-pointer">?</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inline Economic Indicator Explainer Bar -->
+        <div id="indicator-explainer-bar" class="hidden bg-white text-ink border-t border-rule">
+            <div class="max-w-4xl mx-auto px-3 sm:px-5 py-3 flex items-start justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="font-sans text-[10px] font-bold uppercase tracking-wider text-crimson">Edexcel 9EC0 Indicator Guide</span>
+                        <span id="ind-title" class="font-editorial font-bold text-base text-ink"></span>
+                    </div>
+                    <p id="ind-meaning" class="economist-explainer"></p>
+                    <p id="ind-relevance" class="economist-explainer font-bold"></p>
+                </div>
+                <button onclick="closeIndicatorExplainer()" class="font-sans text-xs font-bold uppercase text-muted hover:text-ink shrink-0 cursor-pointer">Close ×</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. FT-SPACED CENTRALLY ALIGNED MASTHEAD (Substantial Emblem + Authoritative Stacked Serif/Sans Lockup, Exact Spacing Preserved) -->
+    <header class="bg-paper">
+        <div class="max-w-[820px] mx-auto px-3 sm:px-5 pt-7 pb-6 flex justify-center">
+            <a href="#top" class="inline-flex items-center gap-7 sm:gap-8 text-left group">
+                <span class="relative w-[96px] h-[96px] sm:w-[114px] sm:h-[114px] bg-crimson text-white font-editorial font-bold text-[42px] sm:text-[50px] tracking-[-0.03em] inline-flex items-center justify-center shrink-0 border-r-[6px] border-ink">
+                    NH
+                </span>
+                <span class="block">
+                    <span class="font-sans font-bold uppercase text-[16px] sm:text-[19.26px] leading-none tracking-[0.28em] text-crimson block mb-2">
+                        NEW HALL
+                    </span>
+                    <span class="font-editorial font-bold uppercase text-[36px] sm:text-[48px] leading-[1.0] tracking-[0.03em] text-ink block">
+                        ECONOMIC REVIEW<span class="text-crimson">.</span>
+                    </span>
+                </span>
+            </a>
+        </div>
+    </header>
+
+    <!-- 3. TIGHTER EDITORIAL COLUMN (Single Clean Line Between Masthead and Title) -->
+    <main class="max-w-[820px] mx-auto px-3 sm:px-5 pt-0 pb-14">
+
+        <!-- Title Only (Larger, Italicized, Separated From Masthead By One Clean Line) -->
+        <div class="border-t border-rule pt-5 mb-5">
+            <h1 id="article-headline" class="font-editorial italic text-[30px] sm:text-[39px] font-bold text-ink leading-[1.15] tracking-[-0.012em]">
+                Why did the Bank of England hike interest rates to 4.00%?
+            </h1>
+        </div>
+
+        <!-- Centralised Editorial Photograph & Credit -->
+        <figure class="mb-6">
+            <div class="w-full overflow-hidden bg-surface border border-rule">
+                <img id="article-hero-image"
+                    src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&q=85"
+                    onerror="this.onerror=null;this.src='https://placehold.co/1200x675/F7F7F7/121212?text=Bank+of+England+Monetary+Policy+Briefing';"
+                    alt="Threadneedle Street and the financial district in London"
+                    class="w-full aspect-[16/9] object-cover block">
+            </div>
+            <figcaption class="mt-2 font-sans text-[12px] leading-snug text-ink border-b border-rule pb-2">
+                <span id="article-photo-caption" class="font-bold">Tightening the screws</span>
+                <span id="article-photo-credit" class="uppercase text-[10.5px] tracking-wider text-muted ml-1.5">PHOTOGRAPH: GETTY IMAGES / LONDON FINANCIAL DISTRICT</span>
+            </figcaption>
+        </figure>
+
+        <!-- Straight Into The Article (No Bold Figures Inside Paragraphs) -->
+        <section id="lead-article-prose" class="economist-prose space-y-5 mb-6">
+            <!-- Rendered dynamically -->
+        </section>
+
+        <!-- MINIMALIST POST-ARTICLE ASK EXAMINER AI BAR -->
+        <section class="mb-9 border-y border-ink bg-surface px-4 py-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-crimson inline-block shrink-0"></span>
+                    <span class="font-sans text-xs font-semibold text-ink">
+                        Need help clarifying an economic mechanism or essay point from this article?
+                    </span>
+                </div>
+                <div class="flex items-center shrink-0">
+                    <button type="button" onclick="openTutorDrawer()"
+                        class="border border-ink bg-white hover:bg-ink hover:text-white text-ink px-3.5 py-1.5 font-sans text-[11px] font-bold uppercase tracking-wider transition cursor-pointer">
+                        Ask Examiner AI &rarr;
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Structured Analysis Sections (01 Economics, 02 Evidence, 03 Graph Application, 04 Evaluation, 05 A-Level Application, 06 Economist Opinions, 07 Daily Practice Question) -->
+        <article id="structured-article-body" class="space-y-9">
+            <!-- Rendered dynamically -->
+        </article>
+
+        <!-- KEY WORDS & TERMINOLOGY BANK (Intro Sentence Removed) -->
+        <section id="terminology-bank" class="mt-12 pt-7 border-t border-ink space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+                <div>
+                    <span class="font-sans text-[10.5px] font-bold uppercase tracking-widest text-crimson block">Edexcel 9EC0 Revision Flashcards</span>
+                    <h2 class="font-editorial text-2xl font-bold text-ink">Key Words and Terminology Bank</h2>
+                </div>
+                <div class="w-full sm:w-56">
+                    <input id="glossary-search" type="text" oninput="renderGlossaryBank()"
+                        placeholder="Filter terms or jargon..."
+                        class="w-full bg-surface border border-rule focus:border-ink px-2.5 py-1.5 font-sans text-xs text-ink placeholder-neutral-400 focus:outline-none">
+                </div>
+            </div>
+            <div id="glossary-grid" class="grid grid-cols-1 gap-3.5">
+                <!-- Rendered via JS -->
+            </div>
+        </section>
+
+        <!-- CLEAN, MINIMALIST 6:00 AM DAILY BRIEFING SUBSCRIBE BLOCK -->
+        <section id="subscribe-section" class="mt-10 pt-7 border-t-2 border-ink">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div class="space-y-1.5 max-w-md">
+                    <span class="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-crimson block">
+                        Morning Edition &middot; 06:00 GMT
+                    </span>
+                    <h2 class="font-editorial text-xl sm:text-2xl font-bold text-ink leading-snug">
+                        Receive yesterday's economic briefing in your inbox everyday at 6:00 AM
+                    </h2>
+                    <p class="font-sans text-xs text-muted leading-relaxed">
+                        Delivered daily with the interactive diagram summary and past-paper question.
+                    </p>
+                </div>
+
+                <form onsubmit="handleSubscribeSubmit(event)" class="w-full md:w-[340px] shrink-0">
+                    <div class="flex items-stretch border-b border-ink pb-1">
+                        <input id="subscribe-email-input" type="email" required
+                            placeholder="Email address"
+                            class="w-full bg-transparent pr-2 py-1.5 font-sans text-xs sm:text-sm text-ink placeholder-neutral-400 focus:outline-none">
+                        <button type="submit"
+                            class="bg-ink hover:bg-crimson text-white font-sans font-bold text-[11px] uppercase tracking-[0.16em] px-4 py-1.5 transition cursor-pointer shrink-0">
+                            Subscribe
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div id="subscribe-confirmation" class="hidden mt-3 economst-explainer font-sans text-xs text-ink border-l-2 border-crimson pl-3 py-1"></div>
+        </section>
+
+    </main>
+
+    <!-- 4. SOLID BLACK ECONOMIST-STYLE FOOTER (Updated Logo Lockup & Tighter Section Spacing) -->
+    <footer class="bg-ink text-white font-sans py-8 px-4 sm:px-6 text-[13px]">
+        <div class="max-w-4xl mx-auto space-y-5">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-neutral-800">
+                <a href="#top" class="inline-flex items-center gap-3 text-left">
+                    <span class="w-9 h-9 bg-crimson text-white font-editorial font-bold text-base tracking-[-0.03em] inline-flex items-center justify-center shrink-0 border-r-2 border-white">
+                        NH
+                    </span>
+                    <span class="block">
+                        <span class="font-sans font-bold uppercase text-[9px] leading-none tracking-[0.26em] text-crimson block mb-0.5">
+                            NEW HALL
+                        </span>
+                        <span class="font-editorial font-bold uppercase text-sm leading-none tracking-[0.04em] text-white block">
+                            ECONOMIC REVIEW<span class="text-crimson">.</span>
+                        </span>
+                    </span>
+                </a>
+                <div class="flex flex-wrap items-center gap-5 text-[12.5px] font-medium">
+                    <button onclick="openDisclaimerModal()" class="text-white hover:underline cursor-pointer">
+                        Reader &amp; AI Disclaimer
+                    </button>
+                    <a href="#subscribe-section" class="text-white hover:underline">
+                        6:00 AM Daily Briefing
+                    </a>
+                    <a href="https://qualifications.pearson.com/en/qualifications/edexcel-a-levels/economics-a-2015.html" target="_blank" rel="noopener noreferrer" class="text-white hover:underline">
+                        Edexcel Economics A (9EC0) Specification
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-5 border-b border-neutral-800 leading-relaxed">
+                <div class="space-y-1.5">
+                    <h3 class="text-[11px] font-bold uppercase tracking-wider text-neutral-400">The Publication</h3>
+                    <p class="text-neutral-200">
+                        Daily macroeconomic and microeconomic current affairs tailored strictly to the Pearson Edexcel A-Level Economics A specification.
+                    </p>
+                </div>
+
+                <div class="space-y-1.5">
+                    <h3 class="text-[11px] font-bold uppercase tracking-wider text-neutral-400">Sources and Data Attribution</h3>
+                    <p class="text-neutral-200">
+                        Bank of England Monetary Policy Committee Summary (25 Nov 2026); Office for National Statistics Consumer Price Inflation Bulletin; Office for Budget Responsibility Outlook; UK Debt Management Office.
+                    </p>
+                </div>
+
+                <div class="space-y-1.5">
+                    <h3 class="text-[11px] font-bold uppercase tracking-wider text-neutral-400">Contact and Technical Support</h3>
+                    <p class="text-neutral-200">
+                        If anyone has any technical issues or suggestions, feel free to contact <a href="mailto:yuarchie77@gmail.com" class="underline font-semibold text-white hover:text-crimson">yuarchie77@gmail.com</a>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-[12px] text-neutral-400">
+                <p>Built for Edexcel A-Level Economics students. Educational revision resource only.</p>
+                <div class="flex flex-wrap items-center gap-4">
+                    <span id="total-users-counter" class="text-neutral-300 font-medium">Total Readers: 1</span>
+                    <span>Contact: <a href="mailto:yuarchie77@gmail.com" class="text-white underline">yuarchie77@gmail.com</a></span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- FLOATING INLINE JARGON POPOVER (0px Radius, No Drop Shadow) -->
+    <div id="jargon-popover" role="dialog" aria-label="Term Definition"
+        class="hidden fixed z-50 w-80 max-w-[calc(100vw-2rem)] bg-white border border-ink p-4">
+        <div class="flex items-start justify-between gap-2 pb-1.5 mb-2 border-b border-rule">
+            <div>
+                <span id="jp-category" class="font-sans text-[10px] font-bold uppercase tracking-widest text-crimson block">Edexcel 9EC0 Jargon</span>
+                <h4 id="jp-term" class="font-editorial font-bold text-base text-ink">Term</h4>
+            </div>
+            <button onclick="closeJargonPopover()" aria-label="Close definition"
+                class="font-sans text-xs font-bold text-muted hover:text-ink px-1.5 py-0.5 border border-rule cursor-pointer">×</button>
+        </div>
+        <p id="jp-definition" class="economist-explainer mb-2"></p>
+        <p id="jp-exam-tip" class="economist-explainer text-[14.5px] bg-surface border border-rule p-2.5 mb-2.5"></p>
+        <button id="jp-ask-ai-btn"
+            class="w-full bg-ink hover:bg-crimson text-white font-sans font-bold text-[11px] uppercase tracking-wider py-2 px-3 transition cursor-pointer">
+            Ask Examiner AI about this term &rarr;
+        </button>
+    </div>
+
+    <!-- FLOATING ECONOMIST OPINIONS WHY-IT-MATTERS POPOVER (0px Radius, No Drop Shadow) -->
+    <div id="opinions-help-popover" role="dialog" aria-label="Why Economist Opinions Matter for A*"
+        class="hidden fixed z-50 w-80 max-w-[calc(100vw-2rem)] bg-white border border-ink p-4">
+        <div class="flex items-start justify-between gap-2 pb-1.5 mb-2 border-b border-rule">
+            <div>
+                <span class="font-sans text-[10px] font-bold uppercase tracking-widest text-crimson block">A* Essay Strategy (AO4)</span>
+                <h4 class="font-editorial font-bold text-base text-ink">Why Economist Opinions Earn A* Grades</h4>
+            </div>
+            <button onclick="closeOpinionsHelp()" aria-label="Close guide"
+                class="font-sans text-xs font-bold text-muted hover:text-ink px-1.5 py-0.5 border border-rule cursor-pointer">×</button>
+        </div>
+        <div class="economist-explainer space-y-2">
+            <p>In Edexcel 9EC0 15-mark and 25-mark essays, reaching Level 4 (A* standard) requires <strong>sustained, balanced evaluation (AO4)</strong> rather than one-sided textbook chains.</p>
+            <p>Comparing <strong>hawkish</strong> and <strong>dovish</strong> perspectives gives you ready-made counter-arguments, trade-offs, and prioritised judgements for your final conclusion.</p>
+        </div>
+    </div>
+
+    <!-- 5. CONTEXTUAL 'ASK EXAMINER AI' SLIDE-OVER DRAWER -->
+    <div id="tutor-backdrop" onclick="closeTutorDrawer()" class="fixed inset-0 bg-black/35 z-40 hidden transition-opacity"></div>
+    <aside id="tutor-drawer" aria-label="Examiner AI"
+        class="fixed top-0 right-0 h-full w-full sm:w-[440px] bg-paper border-l border-ink z-50 transform translate-x-full transition-transform duration-200 flex flex-col">
+        
+        <div class="px-5 py-3.5 border-b border-ink bg-surface flex items-center justify-between">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-crimson inline-block"></span>
+                    <h2 class="font-editorial text-lg font-bold text-ink">Examiner AI (Edexcel 9EC0)</h2>
+                </div>
+                <p id="tutor-context-label" class="font-sans text-[11px] text-muted mt-0.5 truncate max-w-[300px]">
+                    Active Briefing: Why did the Bank of England hike interest rates to 4.00%?
+                </p>
+            </div>
+            <button onclick="closeTutorDrawer()" class="font-sans text-xs font-bold uppercase border border-rule bg-white px-2.5 py-1 hover:border-ink transition cursor-pointer">
+                Close ×
+            </button>
+        </div>
+
+        <div id="tutor-messages" class="flex-1 overflow-y-auto p-4 space-y-3.5"></div>
+
+        <div class="px-4 py-2 border-t border-rule bg-surface flex flex-wrap gap-1.5">
+            <button onclick="sendQuickPrompt('Explain the monetary transmission mechanism for 4.00% Bank Rate')"
+                class="font-sans text-[11px] bg-white border border-rule hover:border-ink px-2.5 py-1 text-ink transition cursor-pointer">
+                Transmission mechanism
+            </button>
+            <button onclick="sendQuickPrompt('Give me two AO4 evaluation points for a 25-mark Edexcel essay')"
+                class="font-sans text-[11px] bg-white border border-rule hover:border-ink px-2.5 py-1 text-ink transition cursor-pointer">
+                AO4 evaluation points
+            </button>
+            <button onclick="sendQuickPrompt('How do I draw the AD/AS diagram for this article?')"
+                class="font-sans text-[11px] bg-white border border-rule hover:border-ink px-2.5 py-1 text-ink transition cursor-pointer">
+                AD/AS diagram guide
+            </button>
+        </div>
+
+        <form onsubmit="handleChatSubmit(event)" class="p-3.5 border-t border-ink bg-white flex gap-2">
+            <input id="tutor-input" type="text" placeholder="Ask about 9EC0 theory, diagrams, or essay structure..."
+                class="flex-1 bg-surface border border-rule focus:border-ink px-3 py-2 font-sans text-xs sm:text-sm text-ink placeholder-neutral-400 focus:outline-none">
+            <button type="submit" class="bg-crimson hover:bg-crimson-dark text-white font-sans font-bold text-xs uppercase tracking-wider px-4 py-2 transition cursor-pointer">
+                Send
+            </button>
+        </form>
+    </aside>
+
+    <!-- 6. FIRST-VISIT READER, AI & CYBER-SAFETY DISCLAIMER MODAL -->
+    <div id="disclaimer-modal" role="dialog" aria-modal="true" aria-labelledby="disclaimer-title"
+        class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+        <div class="bg-paper border border-ink max-w-lg w-full p-5 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-ink pb-2.5">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-2 h-2 bg-crimson inline-block"></span>
+                    <h2 id="disclaimer-title" class="font-editorial text-xl font-bold text-ink">Important Reader and AI Notice</h2>
+                </div>
+                <span class="font-sans text-[10px] font-bold uppercase tracking-widest text-crimson">Before You Read</span>
+            </div>
+
+            <div class="economist-explainer space-y-3">
+                <div class="border-l-2 border-crimson pl-3">
+                    <strong class="text-ink block">1. Previous-Day News Lag (Updated at 6:00 AM)</strong>
+                    <p class="mt-0.5">This briefing summarises yesterday's economic news and is published at 6:00 AM. Market prices, interest rate expectations, and live indicators may have changed since publication.</p>
+                </div>
+
+                <div class="border-l-2 border-ink pl-3">
+                    <strong class="text-ink block">2. AI-Generated Summaries and Examiner Feedback</strong>
+                    <p class="mt-0.5">Parts of this briefing and Examiner AI feedback are generated using artificial intelligence. AI can make mistakes, misinterpret context, or simplify nuance. Always double-check figures and essay advice against official Edexcel 9EC0 mark schemes and your teacher's guidance.</p>
+                </div>
+
+                <div class="border-l-2 border-ink pl-3">
+                    <strong class="text-ink block">3. Cyber Safety and Data Privacy</strong>
+                    <p class="mt-0.5">Do not enter personal details, passwords, full home addresses, or sensitive information into Examiner AI or practice answer boxes. Only submit an email address you are happy to use for the daily briefing.</p>
+                </div>
+
+                <div class="border-l-2 border-ink pl-3">
+                    <strong class="text-ink block">4. Educational Purpose Only (Not Financial Advice)</strong>
+                    <p class="mt-0.5">All articles, interactive charts, and market figures are provided strictly for Edexcel A-Level Economics (9EC0) study and revision. Nothing on this site constitutes financial, investment, or trading advice.</p>
+                </div>
+
+                <div class="bg-surface border border-rule p-3">
+                    <strong class="text-ink block">6:00 AM Daily Digest Subscription</strong>
+                    <p class="mt-0.5">You can subscribe at the bottom of the page to have yesterday's full economic briefing, interactive diagram notes, and daily practice question sent straight to your inbox every day at 6:00 AM.</p>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-rule flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <span class="font-sans text-[11px] text-muted">You can reopen this notice anytime in the footer.</span>
+                <button onclick="acceptDisclaimerModal()"
+                    class="bg-crimson hover:bg-crimson-dark text-white font-sans font-bold text-xs uppercase tracking-wider px-5 py-2.5 transition cursor-pointer shrink-0">
+                    I Understand and Continue &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- APPLICATION SCRIPT -->
+    <script>
+        // --- 0. JARGON & ADVANCED VOCABULARY DICTIONARY (No Name + Acronym Parentheses) ---
+        const JARGON_DICT = {
+            'mpc': {
+                term: 'Monetary Policy Committee',
+                category: 'Edexcel 9EC0 · Theme 2 (2.6.2)',
+                definition: 'The nine-member committee at the Bank of England that meets eight times a year to set the UK main interest rate in order to keep inflation close to 2.0%.',
+                examTip: 'Exam Tip: Always state that the committee is operationally independent from government and targets a symmetrical 2.0% inflation rate.'
+            },
+            'basis-points': {
+                term: 'Basis Points',
+                category: 'Financial Terminology · Theme 4 (4.4)',
+                definition: 'A unit used to measure small changes in interest rates or bond yields. One basis point equals 0.01%, so 25 basis points equals 0.25 percentage points.',
+                examTip: 'Exam Tip: Writing "a 25 basis point hike" shows precision in AO2 application.'
+            },
+            'hawkish': {
+                term: 'Hawkish',
+                category: 'Central Banking Jargon · Theme 2 (2.6.2)',
+                definition: 'A policy stance that prioritises keeping inflation low and favours raising interest rates, or keeping them high, to cool spending even if it slows economic growth.',
+                examTip: 'Exam Tip: Describe central bankers who vote to raise interest rates against inflation threats as "hawkish" to elevate your AO1 vocabulary.'
+            },
+            'dovish': {
+                term: 'Dovish',
+                category: 'Central Banking Jargon · Theme 2 (2.6.2)',
+                definition: 'A policy stance that prioritises supporting economic growth and employment, favouring lower interest rates because policymakers believe inflation risks are limited.',
+                examTip: 'Exam Tip: Contrasting "hawkish" and "dovish" committee views is an effective way to structure AO4 evaluation.'
+            },
+            'empirical': {
+                term: 'Empirical',
+                category: 'Analytical Vocabulary · Quantitative Skills',
+                definition: 'Based on real-world observation, measured statistics, and recorded data rather than pure classroom theory alone.',
+                examTip: 'Exam Tip: Using "empirical evidence" by citing 3.5% inflation or the 4.00% Bank Rate signals strong AO2 data application.'
+            },
+            'stagflationary': {
+                term: 'Stagflation',
+                category: 'Macroeconomic Condition · Theme 2 (2.3.3)',
+                definition: 'A painful economic combination of stagnant economic growth, rising unemployment, and high inflation occurring at the same time.',
+                examTip: 'Exam Tip: Illustrate stagflation by shifting the short-run aggregate supply curve to the left, causing the price level to rise while real output falls.'
+            },
+            'futures': {
+                term: 'Wholesale Gas Futures',
+                category: 'Market Jargon · Theme 1 (1.2.6)',
+                definition: 'Financial contracts agreeing to buy or sell natural gas at a set price on a future date. A 65% jump shows markets expect much higher energy costs ahead.',
+                examTip: 'Exam Tip: Futures prices act as a leading indicator of future cost-push inflation before household bills actually reset.'
+            },
+            'look-through': {
+                term: '"Look Through" a Shock',
+                category: 'Central Banking Jargon · Theme 2 (2.6.2)',
+                definition: 'When a central bank chooses not to raise interest rates in response to a temporary price spike, assuming inflation will fall back on its own once the shock passes.',
+                examTip: 'Exam Tip: Central banks can only "look through" supply shocks if inflation expectations stay anchored at 2.0%.'
+            },
+            'second-round': {
+                term: 'Second-Round Effects',
+                category: 'Macroeconomic Mechanism · Theme 2 (2.1.2)',
+                definition: 'When an initial rise in energy or food prices prompts workers to demand higher wages and firms to raise prices further, turning a one-off shock into persistent inflation.',
+                examTip: 'Exam Tip: Explain that second-round effects shift short-run aggregate supply left a second time unless monetary policy cools demand.'
+            },
+            'cost-push': {
+                term: 'Cost-Push Inflation',
+                category: 'Core Theory · Theme 2 (2.1.2)',
+                definition: 'Inflation triggered by rising business production costs, such as 65% higher wholesale gas or rising wages, forcing firms to raise prices and shifting short-run aggregate supply left.',
+                examTip: 'Exam Tip: Contrast cost-push inflation with demand-pull inflation in your analysis.'
+            },
+            'transmission': {
+                term: 'Monetary Transmission Mechanism',
+                category: 'Core Theory · Theme 2 (2.6.2)',
+                definition: 'The step-by-step chain of events through which a change in the Bank Rate affects mortgage rates, business borrowing, exchange rates, aggregate demand, and finally inflation.',
+                examTip: 'Exam Tip: Edexcel examiners reward students who trace at least two channels, such as borrowing costs and the exchange rate.'
+            },
+            'aggregate-demand': {
+                term: 'Aggregate Demand',
+                category: 'Core Theory · Theme 2 (2.2.1)',
+                definition: 'The total planned spending on UK-produced goods and services at a given price level over a period of time, made up of consumption, investment, government spending, and net exports.',
+                examTip: 'Exam Tip: Always specify which component changes; household consumption is roughly 60% of UK total demand.'
+            },
+            'de-anchoring': {
+                term: 'De-anchoring Inflation Expectations',
+                category: 'Advanced Macro Jargon · Theme 2 (2.1.2)',
+                definition: 'When households and businesses stop believing inflation will return to the 2.0% target and start building 4% to 5% price rises into every wage deal and price tag.',
+                examTip: 'Exam Tip: Use this to justify why the committee hiked rates even though high interest rates cannot create more gas.'
+            },
+            'gilts': {
+                term: 'UK Government Gilts and Gilt Yields',
+                category: 'Financial Markets · Theme 4 (4.4.1)',
+                definition: 'Bonds issued by the UK government to borrow money from investors. The yield, currently 5.0%, is the effective annual interest rate the government must pay.',
+                examTip: 'Exam Tip: Higher gilt yields increase government debt-interest spending, reducing fiscal headroom for tax cuts or public services.'
+            },
+            'symmetrical-target': {
+                term: 'Symmetrical Inflation Target',
+                category: 'Policy Framework · Theme 2 (2.6.2)',
+                definition: 'An inflation target of 2.0% in the UK where inflation falling below target is treated as just as undesirable as inflation rising above target.',
+                examTip: 'Exam Tip: If inflation moves more than 1.0 percentage point away from 2.0% in either direction, the Governor must write an open letter to the Chancellor.'
+            },
+            'negative-output-gap': {
+                term: 'Negative Output Gap',
+                category: 'Macroeconomic Theory · Theme 2 (2.5.3)',
+                definition: 'When actual real output is below the economy productive potential, resulting in spare capacity and upward pressure on unemployment.',
+                examTip: 'Exam Tip: Show a negative output gap on a diagram by placing short-run equilibrium to the left of vertical long-run aggregate supply.'
+            }
+        };
+
+        /* No underline under jargon terms; refined mathematical superscript ? like x² */
+        function j(key, label) {
+            const safeLabel = label || (JARGON_DICT[key] ? JARGON_DICT[key].term : key);
+            return `<span class="inline-term font-normal text-ink">${safeLabel}<sup class="ml-[1px]"><button type="button" onclick="openJargonPopover(event, '${key}')" aria-label="Explain ${safeLabel}" class="font-sans text-[11px] font-bold text-crimson hover:text-ink leading-none cursor-pointer bg-transparent border-0 p-0">?</button></sup></span>`;
+        }
+
+        // --- 1. ECONOMIC INDICATOR EXPLAINER DATA (No Acronym Parentheses) ---
+        const INDICATORS = {
+            'bank-rate': {
+                title: 'Bank of England Bank Rate: 4.00% (+0.25 bps)',
+                meaning: 'The benchmark interest rate paid on commercial bank reserves held at the Bank of England. It anchors borrowing and savings rates across the UK economy.',
+                relevance: 'Edexcel 9EC0 Link (2.6.2): Raising Bank Rate increases the cost of borrowing and reward for saving, reducing consumption and investment via the monetary transmission mechanism to shift aggregate demand left.'
+            },
+            'cpi': {
+                title: 'Consumer Price Index Inflation: 3.5%',
+                meaning: 'The annual percentage change in the price of a representative basket of UK household goods and services, currently 1.5 percentage points above the 2.0% target.',
+                relevance: 'Edexcel 9EC0 Link (2.1.2): Exceeding the 2.0% symmetrical target requires the Governor to write an explanatory letter to the Chancellor and weigh demand-side tightening against cost-push shocks.'
+            },
+            'gilt': {
+                title: 'UK 10-Year Gilt Yield: 5.0%',
+                meaning: 'The annual return demanded by bond market investors to lend to the UK government over a 10-year horizon.',
+                relevance: 'Edexcel 9EC0 Link (2.6.2 & 4.4.1): Higher gilt yields raise government debt-interest spending, tightening the Chancellor fiscal headroom and raising the opportunity cost of unfunded borrowing.'
+            },
+            'gdp': {
+                title: 'UK Real GDP Growth: 1.10% YoY',
+                meaning: 'The annual rate of change in the volume of goods and services produced in the UK, adjusted for inflation.',
+                relevance: 'Edexcel 9EC0 Link (2.1.1 & 2.6.4): Growth of 1.1% sits below the UK historical trend of roughly 2.0%, highlighting a negative output gap and the classic conflict between growth and inflation.'
+            }
+        };
+
+        // --- 2. SINGLE DAILY LEAD BRIEFING (No Bold Inline Figures, No Name + Acronym Parentheses) ---
+        const DAILY_STORY = {
+            id: 'boe-hike',
+            title: 'Why did the Bank of England hike interest rates to 4.00%?',
+            heroImage: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&q=85',
+            photoCaption: 'Tightening the screws',
+            photoCredit: 'PHOTOGRAPH: GETTY IMAGES / LONDON FINANCIAL DISTRICT',
+            hasRelevantGraph: true,
+            chartTitle: 'Interactive AD / AS Policy Simulator and Rates Trajectory',
+            articleParagraphs: [
+                `At its latest policy meeting, the Bank of England's ${j('mpc', 'Monetary Policy Committee')} voted by an 8-1 majority to raise the benchmark Bank Rate by 25 ${j('basis-points', 'basis points')}, taking it from 3.75% to 4.00%. External committee member Catherine Mann took an even more ${j('hawkish', 'hawkish')} stance, dissenting in favour of a larger 50 basis point increase to 4.25%.`,
+                `The decision marks a decisive shift back toward monetary tightening after escalating geopolitical conflict drove UK ${j('futures', 'wholesale natural gas futures')} up by 65%. Official ${j('empirical', 'empirical')} data show headline consumer price inflation has climbed to 3.5%, breaching the Bank's ${j('symmetrical-target', 'symmetrical 2.0% target')}. The Bank now projects inflation could peak near 5.0% in Q2 2027, even though sluggish 1.1% UK output growth leaves the economy facing a ${j('stagflationary', 'stagflationary')} squeeze and a widening ${j('negative-output-gap', 'negative output gap')}.`,
+                `Explaining the vote, policymaker Megan Greene warned that the central bank cannot simply ${j('look-through', '"look through"')} imported energy shocks when labour markets remain tight enough for workers and firms to pass higher energy costs into ${j('second-round', 'second-round effects')}.`
+            ],
+            pullQuote: '"Raising Bank Rate cannot drill more gas. It works by cooling domestic demand enough to stop a temporary energy shock from becoming a permanent wage-price spiral."',
+            specTopics: [
+                { code: '2.1.2', name: 'Inflation (Cost-Push vs. Demand-Pull, Expectations)' },
+                { code: '2.2.1 / 2.3.3', name: 'Aggregate Demand & Short-Run Aggregate Supply Shocks' },
+                { code: '2.5.3', name: 'Output Gaps (Negative Output Gap and Spare Capacity)' },
+                { code: '2.6.2', name: 'Demand-Side Policies: Monetary Policy & Transmission Mechanism' },
+                { code: '2.6.4', name: 'Conflicts and Trade-Offs Between Macroeconomic Objectives' },
+                { code: '4.1.8', name: 'Exchange Rates (Interest Rate Differentials and Hot Money)' }
+            ],
+            economics: {
+                summary: `This episode illustrates the classic Edexcel Theme 2 macroeconomic tension between an external ${j('cost-push', 'cost-push inflation')} shock and domestic demand-side monetary policy.`,
+                points: [
+                    {
+                        term: 'Cost-Push Shock',
+                        desc: `A 65% spike in wholesale gas raises firms' variable energy costs at every price level. Short-run aggregate supply shifts inward, causing ${j('stagflationary', 'stagflation')}: higher prices alongside lower real output.`
+                    },
+                    {
+                        term: 'Monetary Transmission',
+                        desc: `Via the ${j('transmission', 'monetary transmission mechanism')}, raising Bank Rate to 4.00% increases mortgage and loan rates while rewarding saving. Consumption and investment contract, shifting ${j('aggregate-demand', 'aggregate demand')} inward.`
+                    },
+                    {
+                        term: 'Inflation Expectations',
+                        desc: `If households expect 5.0% inflation in 2027, ${j('de-anchoring', 'de-anchoring inflation expectations')} occurs. Trade unions bargain for higher nominal wages, shifting short-run aggregate supply left a second time unless policymakers act.`
+                    }
+                ]
+            },
+            evidence: {
+                intro: `${j('empirical', 'Empirical')} indicators released alongside the Monetary Policy Report highlight the narrow corridor facing policymakers:`,
+                table: [
+                    { metric: 'Committee Policy Decision', reading: '4.00% (+25 bps)', context: '8-1 vote; C. Mann voted for 4.25%' },
+                    { metric: 'Headline UK Inflation', reading: '3.5% YoY', context: '1.5 percentage points above 2.0% target' },
+                    { metric: 'Inflation Peak Forecast', reading: '~5.0% (Q2 2027)', context: 'Driven by +65% wholesale gas futures' },
+                    { metric: 'Real Output Growth Forecast', reading: '1.1% (2026/27)', context: 'Below ~2.0% UK historical trend growth' }
+                ]
+            },
+            evaluation: [
+                {
+                    title: 'Blunt Instrument Against Supply Shocks',
+                    detail: `Monetary policy suppresses domestic ${j('aggregate-demand', 'aggregate demand')}, whereas the root cause of 3.5% inflation is an imported ${j('cost-push', 'cost-push')} shock. Tightening total spending lowers inflation only by sacrificing real output and jobs.`
+                },
+                {
+                    title: 'Long and Variable Time Lags (18 to 24 Months)',
+                    detail: `Because millions of UK households hold fixed-rate mortgages, the ${j('transmission', 'transmission mechanism')} will not reach peak contractionary force until mid-2028, which is too late to prevent the projected Q2 2027 inflation peak.`
+                },
+                {
+                    title: 'Exchange Rate Channel Offset',
+                    detail: `Higher UK yields attract hot-money inflows, supporting Sterling around $1.27 and helping push ${j('gilts', '10-year gilt yields')} to 5.0%. A firmer pound lowers the sterling cost of dollar-denominated energy imports.`
+                }
+            ],
+            application: {
+                essayPrompt: 'Evaluate the view that raising the Bank Rate to 4.00% is the most effective policy response to rising UK inflation. (25 marks)',
+                checklist: [
+                    { code: 'AO1', label: 'Define Bank Rate, the 2.0% inflation target, and cost-push vs. demand-pull inflation.' },
+                    { code: 'AO2', label: 'Cite verified figures: 4.00% Bank Rate, +65% gas futures, 3.5% inflation, and 1.1% output growth.' },
+                    { code: 'AO3', label: 'Build a 4-step chain: 4.00% Bank Rate leads to higher borrowing costs, lower consumption and investment, inward demand shift, and weaker wage pressure.' },
+                    { code: 'AO4', label: 'Weigh 18 to 24 month time lags and stagflation risk against alternative supply-side energy policies.' }
+                ]
+            },
+            opinionsHeadline: 'Hawkish vs. Dovish: Should policymakers tighten into an energy supply shock?',
+            opinionsArgs: [
+                {
+                    stance: `The ${j('hawkish', 'Hawkish')} Case (8-1 Majority)`,
+                    text: `With inflation at 3.5% and forecast to hit 5.0% by Q2 2027, failing to hike risks ${j('de-anchoring', 'de-anchoring inflation expectations')}. Workers will demand compensatory pay rises, turning a temporary gas shock into entrenched domestic inflation.`
+                },
+                {
+                    stance: `The ${j('dovish', 'Dovish')} Counter-Argument`,
+                    text: `Interest rates cannot increase North Sea gas supply or lower global freight costs. With real output growth at just 1.1% and monetary lags lasting 18 to 24 months, tightening demand now risks pushing the UK into recession.`
+                }
+            ],
+            questionBank: {
+                '10-mark': {
+                    label: '10-Mark Past Paper Question',
+                    source: 'Edexcel 9EC0/02 (Paper 2: The UK Economy, June 2022 Section B Adapted)',
+                    paperUrl: 'https://qualifications.pearson.com/en/qualifications/edexcel-a-levels/economics-a-2015.coursematerials.html',
+                    question: 'With reference to the data provided, explain how a rise in the Bank Rate to 4.00% is likely to affect UK Aggregate Demand and the rate of inflation. (10 marks)',
+                    markGuide: 'Award up to 4 marks for knowledge and analysis (defining Bank Rate, explaining two transmission channels such as mortgage rates and exchange rates, and showing aggregate demand shifting left) and up to 4 marks for data references (4.00% rate, 3.5% inflation, +65% gas futures) plus 2 marks for clear diagram analysis.'
+                },
+                '12-mark': {
+                    label: '12-Mark Past Paper Question',
+                    source: 'Edexcel 9EC0/02 (Paper 2: The UK Economy, June 2023 Q6c Adapted)',
+                    paperUrl: 'https://qualifications.pearson.com/en/qualifications/edexcel-a-levels/economics-a-2015.coursematerials.html',
+                    question: 'Examine the likely macroeconomic effects of a 65% surge in wholesale natural gas prices on UK inflation and real economic growth. (12 marks)',
+                    markGuide: 'Level 3 (9-12 marks): Explains how higher energy input costs shift short-run aggregate supply inward, causing cost-push inflation (rising from 3.5% toward 5.0%) and lower real growth (1.1%), balanced with 4 marks of evaluation (such as temporary vs. persistent shock, or raising Bank Rate to 4.00% to anchor expectations).'
+                },
+                '25-mark': {
+                    label: '25-Mark Essay Question',
+                    source: 'Edexcel 9EC0/02 (Paper 2: The UK Economy, June 2019 Q7 / 2023 Section C Style)',
+                    paperUrl: 'https://qualifications.pearson.com/en/qualifications/edexcel-a-levels/economics-a-2015.coursematerials.html',
+                    question: 'Evaluate the effectiveness of monetary policy in reducing inflation when an economy is experiencing a supply-side energy shock. (25 marks)',
+                    markGuide: 'Level 4 (19-25 marks): Sustained chains of reasoning on the monetary transmission mechanism (4.00% Bank Rate, consumption, investment, and Sterling at $1.27), contrasted with deep evaluation (18-24 month time lags, fixed-rate mortgages, conflict with 1.1% output growth, and alternative supply-side energy policies).'
+                },
+                'maths': {
+                    label: 'Quantitative Skills (Maths) Question',
+                    source: 'Edexcel 9EC0/02 Quantitative Skills (Spec 4.1: Percentages, Basis Points & Real Interest Rates)',
+                    paperUrl: 'https://qualifications.pearson.com/en/qualifications/edexcel-a-levels/economics-a-2015.coursematerials.html',
+                    question: 'Using the briefing figures: (a) Calculate the percentage increase in the Bank Rate when it rises by 25 basis points from 3.75% to 4.00%. (b) Calculate the approximate real Bank Rate when nominal Bank Rate is 4.00% and consumer price inflation is 3.50%, and explain its implication for UK savers. (6 marks)',
+                    markGuide: '(a) Percentage change = ((4.00 - 3.75) / 3.75) x 100 = +6.67% (2 marks). (b) Approximate real interest rate = Nominal rate (4.00%) minus inflation (3.50%) = +0.50% (2 marks). Implication: A positive real return of +0.50% restores a modest real incentive to save rather than spend, reinforcing the contractionary effect on consumption (2 marks).'
+                }
+            }
+        };
+
+        // --- 3. STATE & USER TRACKING ---
+        let activeVisualTab = 'diagram';
+        let simSupplyShock = true;
+        let simBankRate = 4.00;
+        let selectedDataPointIdx = 3;
+        let selectedQuestionType = '10-mark';
+        let checklistState = {};
+        let chatHistory = [];
+
+        function trackTotalUsers() {
+            try {
+                const TOTAL_KEY = 'nh_econ_total_users_count';
+                const SESSION_KEY = 'nh_econ_user_counted_session';
+                let totalUsers = parseInt(localStorage.getItem(TOTAL_KEY) || '0', 10);
+                if (isNaN(totalUsers) || totalUsers < 0) totalUsers = 0;
+
+                if (!sessionStorage.getItem(SESSION_KEY)) {
+                    totalUsers += 1;
+                    localStorage.setItem(TOTAL_KEY, String(totalUsers));
+                    sessionStorage.setItem(SESSION_KEY, 'true');
+                }
+
+                const counterEl = document.getElementById('total-users-counter');
+                if (counterEl) {
+                    counterEl.textContent = `Total Readers: ${totalUsers.toLocaleString()}`;
+                }
+            } catch (e) {}
+        }
+
+        function escapeQuotes(str) {
+            return String(str || '')
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'")
+                .replace(/"/g, '&quot;');
+        }
+
+        // --- 4. JARGON POPOVER, OPINIONS HELP POPOVER & TERMINOLOGY BANK ---
+        function openJargonPopover(event, key) {
+            event.stopPropagation();
+            closeOpinionsHelp();
+            const entry = JARGON_DICT[key];
+            if (!entry) return;
+
+            const popover = document.getElementById('jargon-popover');
+            document.getElementById('jp-category').textContent = entry.category;
+            document.getElementById('jp-term').textContent = entry.term;
+            document.getElementById('jp-definition').textContent = entry.definition;
+            document.getElementById('jp-exam-tip').textContent = entry.examTip;
+
+            const askBtn = document.getElementById('jp-ask-ai-btn');
+            askBtn.onclick = () => {
+                closeJargonPopover();
+                openTutorDrawer(entry.term, `Explain "${entry.term}" in plain English and show how I can use it in an Edexcel 9EC0 essay on "${DAILY_STORY.title}".`);
+            };
+
+            popover.classList.remove('hidden');
+            positionPopoverNearButton(popover, event.currentTarget);
+        }
+
+        function closeJargonPopover() {
+            document.getElementById('jargon-popover').classList.add('hidden');
+        }
+
+        function openOpinionsHelp(event) {
+            event.stopPropagation();
+            closeJargonPopover();
+            const popover = document.getElementById('opinions-help-popover');
+            popover.classList.remove('hidden');
+            positionPopoverNearButton(popover, event.currentTarget);
+        }
+
+        function closeOpinionsHelp() {
+            document.getElementById('opinions-help-popover').classList.add('hidden');
+        }
+
+        function positionPopoverNearButton(popover, targetBtn) {
+            const rect = targetBtn.getBoundingClientRect();
+            const popWidth = 320;
+            const popHeight = popover.offsetHeight || 220;
+
+            let left = rect.left + window.scrollX - (popWidth / 2) + 8;
+            left = Math.max(12, Math.min(left, window.innerWidth - popWidth - 12));
+
+            let top = rect.bottom + 8;
+            if (top + popHeight > window.innerHeight - 12) {
+                top = Math.max(12, rect.top - popHeight - 8);
+            }
+
+            popover.style.left = `${left}px`;
+            popover.style.top = `${top}px`;
+        }
+
+        document.addEventListener('click', (e) => {
+            const jp = document.getElementById('jargon-popover');
+            if (!jp.classList.contains('hidden') && !jp.contains(e.target)) {
+                closeJargonPopover();
+            }
+            const op = document.getElementById('opinions-help-popover');
+            if (!op.classList.contains('hidden') && !op.contains(e.target)) {
+                closeOpinionsHelp();
+            }
+        });
+
+        function renderGlossaryBank() {
+            const query = (document.getElementById('glossary-search')?.value || '').trim().toLowerCase();
+            const grid = document.getElementById('glossary-grid');
+            const entries = Object.entries(JARGON_DICT).filter(([_, item]) => {
+                if (!query) return true;
+                return item.term.toLowerCase().includes(query) ||
+                       item.definition.toLowerCase().includes(query) ||
+                       item.category.toLowerCase().includes(query);
+            });
+
+            if (entries.length === 0) {
+                grid.innerHTML = `<p class="font-sans text-xs text-muted py-3">No matching terms found.</p>`;
+                return;
+            }
+
+            grid.innerHTML = entries.map(([_, item]) => `
+                <div class="bg-surface border border-rule p-4 space-y-1.5">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="font-sans text-[10px] font-bold uppercase tracking-widest text-crimson">${item.category}</span>
+                        <button onclick="openTutorDrawer('${escapeQuotes(item.term)}', 'Give me an example sentence using ${escapeQuotes(item.term)} in a 25-mark Edexcel 9EC0 essay.')"
+                            class="font-sans text-[11px] font-bold uppercase text-muted hover:text-ink underline cursor-pointer">
+                            Ask AI &rarr;
+                        </button>
+                    </div>
+                    <h3 class="font-editorial font-bold text-lg text-ink">${item.term}</h3>
+                    <p class="economist-explainer">${item.definition}</p>
+                    <p class="economist-explainer text-[14.5px] bg-white border border-rule px-3 py-2">${item.examTip}</p>
+                </div>
+            `).join('');
+        }
+
+        // --- 5. INDICATOR EXPLAINER CONTROLS ---
+        function openIndicatorExplainer(key) {
+            const info = INDICATORS[key];
+            if (!info) return;
+            document.getElementById('ind-title').textContent = info.title;
+            document.getElementById('ind-meaning').textContent = info.meaning;
+            document.getElementById('ind-relevance').textContent = info.relevance;
+            document.getElementById('indicator-explainer-bar').classList.remove('hidden');
+        }
+
+        function closeIndicatorExplainer() {
+            document.getElementById('indicator-explainer-bar').classList.add('hidden');
+        }
+
+        // --- 6. INTERACTIVE DYNAMIC GRAPH & AD/AS SIMULATOR ---
+        function switchVisualTab(tab) {
+            activeVisualTab = tab;
+            const dataBtn = document.getElementById('tab-chart-data');
+            const diagBtn = document.getElementById('tab-chart-diagram');
+            const simControls = document.getElementById('simulator-controls');
+
+            if (tab === 'diagram') {
+                diagBtn.className = 'px-2.5 py-1 bg-ink text-white cursor-pointer';
+                dataBtn.className = 'px-2.5 py-1 text-ink hover:bg-white cursor-pointer';
+                if (simControls) simControls.classList.remove('hidden');
+            } else {
+                dataBtn.className = 'px-2.5 py-1 bg-ink text-white cursor-pointer';
+                diagBtn.className = 'px-2.5 py-1 text-ink hover:bg-white cursor-pointer';
+                if (simControls) simControls.classList.add('hidden');
+            }
+            renderVisualGraphic();
+        }
+
+        function toggleSupplyShock() {
+            simSupplyShock = !simSupplyShock;
+            const btn = document.getElementById('btn-toggle-shock');
+            if (simSupplyShock) {
+                btn.textContent = '1. Energy Shock (SRAS₁ → SRAS₂): ON';
+                btn.className = 'font-sans text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 border border-ink bg-crimson text-white transition cursor-pointer';
+            } else {
+                btn.textContent = '1. Energy Shock (SRAS₁ → SRAS₂): OFF';
+                btn.className = 'font-sans text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 border border-ink bg-white text-ink transition cursor-pointer';
+            }
+            renderVisualGraphic();
+        }
+
+        function updateBankRateSlider(val) {
+            simBankRate = parseFloat(val);
+            document.getElementById('slider-rate-display').textContent = simBankRate.toFixed(2) + '%';
+            renderVisualGraphic();
+        }
+
+        function resetSimulator() {
+            simSupplyShock = false;
+            simBankRate = 3.75;
+            document.getElementById('bank-rate-slider').value = '3.75';
+            document.getElementById('slider-rate-display').textContent = '3.75%';
+            const btn = document.getElementById('btn-toggle-shock');
+            btn.textContent = '1. Energy Shock (SRAS₁ → SRAS₂): OFF';
+            btn.className = 'font-sans text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 border border-ink bg-white text-ink transition cursor-pointer';
+            renderVisualGraphic();
+        }
+
+        function selectDataPoint(idx) {
+            selectedDataPointIdx = idx;
+            renderVisualGraphic();
+        }
+
+        function renderVisualGraphic() {
+            const container = document.getElementById('visual-svg-container');
+            const readout = document.getElementById('simulator-live-readout');
+            if (!container) return;
+
+            if (activeVisualTab === 'diagram') {
+                const srasShift = simSupplyShock ? 34 : 0;
+                const rateSteps = Math.round((simBankRate - 3.75) / 0.25);
+                const adShift = rateSteps * 16;
+
+                const eqX = (250 - srasShift - adShift) / 1.25;
+                const eqY = 10 + 0.60 * eqX + adShift;
+                const baseX = 200;
+                const baseY = 130;
+                const lrasX = 212;
+
+                const impliedCPI = (2.2 + (simSupplyShock ? 1.5 : 0) - rateSteps * 0.2).toFixed(1);
+                const impliedGDP = (1.5 - (simSupplyShock ? 0.3 : 0) - rateSteps * 0.1).toFixed(1);
+                const outputGap = (((eqX - lrasX) / lrasX) * 10).toFixed(1);
+
+                let statusMsg = '';
+                if (!simSupplyShock && rateSteps === 0) {
+                    statusMsg = `<strong>Baseline Equilibrium (E₁):</strong> Bank Rate at <strong>3.75%</strong> with no energy shock. CPI sits near <strong>2.2%</strong> and Real GDP grows at <strong>1.5%</strong>. Toggle the <em>Energy Shock</em> or drag the <em>Bank Rate slider</em> to watch the curves move.`;
+                } else if (simSupplyShock && rateSteps === 0) {
+                    statusMsg = `<strong>Stagflation Shock (SRAS₁ &rarr; SRAS₂):</strong> The +65% wholesale gas surge shifts SRAS left. Price Level jumps (<strong>P₁ &rarr; P₂</strong>, CPI ~<strong>${impliedCPI}%</strong>) while Real GDP falls (<strong>Y₁ &rarr; Y₂</strong>, growth <strong>${impliedGDP}%</strong>), widening the negative output gap to <strong>${outputGap}%</strong>.`;
+                } else {
+                    statusMsg = `<strong>Active Policy Response (Bank Rate ${simBankRate.toFixed(2)}%):</strong> Raising Bank Rate shifts <strong>AD left</strong> via higher borrowing costs, pulling Price Level down along SRAS to curb second-round inflation (CPI ~<strong>${impliedCPI}%</strong>), though Real GDP slows further to <strong>${impliedGDP}%</strong> (Output Gap: <strong>${outputGap}%</strong>).`;
+                }
+                if (readout) readout.innerHTML = statusMsg;
+
+                const srasX1 = 90, srasY1 = 260 - 0.65 * srasX1 - srasShift;
+                const srasX2 = 335, srasY2 = 260 - 0.65 * srasX2 - srasShift;
+                const adX1 = 85, adY1 = 10 + 0.60 * adX1 + adShift;
+                const adX2 = 345, adY2 = 10 + 0.60 * adX2 + adShift;
+
+                container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-center">
+                    <div class="md:col-span-8">
+                        <svg viewBox="0 0 430 265" class="w-full h-auto bg-white" role="img" aria-label="Interactive AD and SRAS Diagram">
+                            <line x1="55" y1="20" x2="55" y2="225" stroke="#111111" stroke-width="1.5"/>
+                            <line x1="55" y1="225" x2="405" y2="225" stroke="#111111" stroke-width="1.5"/>
+                            
+                            <text x="14" y="32" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#111111">Price</text>
+                            <text x="14" y="45" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#111111">Level</text>
+                            <text x="335" y="247" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#111111">Real GDP (Y)</text>
+
+                            <line x1="${lrasX}" y1="22" x2="${lrasX}" y2="225" stroke="#737373" stroke-width="1.5" stroke-dasharray="4 3"/>
+                            <text x="${lrasX - 12}" y="16" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#555555">LRAS</text>
+
+                            ${simSupplyShock ? `
+                                <line x1="90" y1="${260 - 0.65 * 90}" x2="335" y2="${260 - 0.65 * 335}" stroke="#D4D4D4" stroke-width="1.5" stroke-dasharray="3 3"/>
+                                <text x="340" y="${260 - 0.65 * 335 + 3}" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#999999">SRAS₁</text>
+                            ` : ''}
+                            ${rateSteps > 0 ? `
+                                <line x1="85" y1="${10 + 0.60 * 85}" x2="345" y2="${10 + 0.60 * 345}" stroke="#D4D4D4" stroke-width="1.5" stroke-dasharray="3 3"/>
+                                <text x="350" y="${10 + 0.60 * 345 + 3}" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#999999">AD₁</text>
+                            ` : ''}
+
+                            <circle cx="${baseX}" cy="${baseY}" r="3" fill="#A3A3A3"/>
+                            <text x="${baseX + 6}" y="${baseY - 4}" font-family="Helvetica, Arial, sans-serif" font-size="9.5" fill="#737373">E₁</text>
+
+                            <line x1="${srasX1}" y1="${srasY1}" x2="${srasX2}" y2="${srasY2}" stroke="${simSupplyShock ? '#E3120B' : '#111111'}" stroke-width="2.3"/>
+                            <text x="${srasX2 + 5}" y="${srasY2 + 3}" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="${simSupplyShock ? '#E3120B' : '#111111'}">${simSupplyShock ? 'SRAS₂' : 'SRAS₁'}</text>
+
+                            <line x1="${adX1}" y1="${adY1}" x2="${adX2}" y2="${adY2}" stroke="#111111" stroke-width="2.3"/>
+                            <text x="${adX2 + 5}" y="${adY2 + 3}" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#111111">${rateSteps > 0 ? 'AD₂' : 'AD₁'}</text>
+
+                            <line x1="55" y1="${eqY}" x2="${eqX}" y2="${eqY}" stroke="#E3120B" stroke-width="1.2" stroke-dasharray="3 2"/>
+                            <line x1="${eqX}" y1="${eqY}" x2="${eqX}" y2="225" stroke="#E3120B" stroke-width="1.2" stroke-dasharray="3 2"/>
+                            <circle cx="${eqX}" cy="${eqY}" r="5" fill="#E3120B"/>
+                            <text x="30" y="${eqY + 4}" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#E3120B">P*</text>
+                            <text x="${eqX - 6}" y="240" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#E3120B">Y*</text>
+                        </svg>
+                    </div>
+                    <div class="md:col-span-4 grid grid-cols-3 md:grid-cols-1 gap-2">
+                        <div class="bg-surface border border-rule p-2.5">
+                            <span class="font-sans text-[9.5px] font-bold uppercase tracking-wider text-muted block">Simulated CPI</span>
+                            <span class="font-sans text-lg font-bold text-crimson">${impliedCPI}%</span>
+                        </div>
+                        <div class="bg-surface border border-rule p-2.5">
+                            <span class="font-sans text-[9.5px] font-bold uppercase tracking-wider text-muted block">Simulated GDP</span>
+                            <span class="font-sans text-lg font-bold text-ink">${impliedGDP}%</span>
+                        </div>
+                        <div class="bg-surface border border-rule p-2.5">
+                            <span class="font-sans text-[9.5px] font-bold uppercase tracking-wider text-muted block">Output Gap</span>
+                            <span class="font-sans text-lg font-bold text-ink">${outputGap}%</span>
+                        </div>
+                    </div>
+                </div>
+                `;
+                return;
+            }
+
+            const dataPoints = [
+                { label: "Q4 '25", rate: 4.25, cpi: 2.6, x: 95, rateY: 60, cpiY: 126, note: 'CPI inflation stood at 2.6% while the Bank Rate was gradually easing from its 2024 peak.' },
+                { label: "Q2 '26", rate: 3.75, cpi: 2.7, x: 215, rateY: 80, cpiY: 122, note: 'The MPC cut Bank Rate to 3.75% as inflation hovered near 2.7% before energy markets tightened.' },
+                { label: "Q3 '26", rate: 3.75, cpi: 3.1, x: 335, rateY: 80, cpiY: 106, note: 'Escalating Middle East tensions pushed wholesale gas futures higher, lifting CPI to 3.1%.' },
+                { label: "Nov '26", rate: 4.00, cpi: 3.5, x: 455, rateY: 70, cpiY: 90, note: 'MPC voted 8-1 to hike Bank Rate to 4.00% as CPI reached 3.5% (+1.5pp above the 2.0% target).' },
+                { label: "Q2 '27 (Est.)", rate: 4.00, cpi: 5.0, x: 575, rateY: 70, cpiY: 32, note: 'BoE central projection: household utility tariff resets push headline CPI to a ~5.0% peak.' }
+            ];
+
+            const activePt = dataPoints[selectedDataPointIdx] || dataPoints[3];
+
+            container.innerHTML = `
+            <div class="space-y-2.5">
+                <div class="bg-surface border border-rule px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+                    <div class="economist-explainer text-[15px]">
+                        <span class="font-sans text-[10px] font-bold uppercase tracking-wider text-crimson mr-2">${activePt.label}:</span>
+                        <span>${activePt.note}</span>
+                    </div>
+                    <div class="font-sans text-xs font-bold shrink-0">
+                        <span class="text-ink mr-3">Rate: ${activePt.rate.toFixed(2)}%</span>
+                        <span class="text-crimson">CPI: ${activePt.cpi.toFixed(1)}%</span>
+                    </div>
+                </div>
+                <svg viewBox="0 0 640 215" class="w-full h-auto bg-white" role="img" aria-label="Interactive UK Bank Rate vs CPI Chart">
+                    <line x1="50" y1="30" x2="610" y2="30" stroke="#E5E5E5" stroke-width="1"/>
+                    <line x1="50" y1="70" x2="610" y2="70" stroke="#E5E5E5" stroke-width="1"/>
+                    <line x1="50" y1="110" x2="610" y2="110" stroke="#E5E5E5" stroke-width="1"/>
+                    <line x1="50" y1="150" x2="610" y2="150" stroke="#111111" stroke-width="1" stroke-dasharray="3 3"/>
+                    <line x1="50" y1="190" x2="610" y2="190" stroke="#111111" stroke-width="1.2"/>
+
+                    <text x="12" y="34" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#555555">5.0%</text>
+                    <text x="12" y="74" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#555555">4.0%</text>
+                    <text x="12" y="114" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#555555">3.0%</text>
+                    <text x="12" y="154" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#111111">2.0%</text>
+                    <text x="12" y="194" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#555555">1.0%</text>
+                    <text x="515" y="145" font-family="Helvetica, Arial, sans-serif" font-size="9.5" fill="#555555">BoE 2.0% Target</text>
+
+                    <line x1="${activePt.x}" y1="24" x2="${activePt.x}" y2="190" stroke="#111111" stroke-width="1" stroke-dasharray="2 2"/>
+
+                    <polyline fill="none" stroke="#111111" stroke-width="2.5" points="95,60 215,80 335,80 455,70 575,70"/>
+                    <polyline fill="none" stroke="#E3120B" stroke-width="2.5" points="95,126 215,122 335,106 455,90"/>
+                    <line x1="455" y1="90" x2="575" y2="32" stroke="#E3120B" stroke-width="2.5" stroke-dasharray="5 3"/>
+
+                    ${dataPoints.map((pt, i) => {
+                        const isSel = i === selectedDataPointIdx;
+                        return `
+                        <g onclick="selectDataPoint(${i})" onmouseenter="selectDataPoint(${i})" class="cursor-pointer">
+                            <rect x="${pt.x - 30}" y="20" width="60" height="175" fill="transparent"/>
+                            <circle cx="${pt.x}" cy="${pt.rateY}" r="${isSel ? 6 : 3.5}" fill="#111111" stroke="#FFFFFF" stroke-width="1.5"/>
+                            <circle cx="${pt.x}" cy="${pt.cpiY}" r="${isSel ? 6 : 3.5}" fill="#E3120B" stroke="#FFFFFF" stroke-width="1.5"/>
+                            <text x="${pt.x - 20}" y="208" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="${isSel ? '700' : '400'}" fill="${isSel ? '#E3120B' : '#555555'}">${pt.label}</text>
+                        </g>
+                        `;
+                    }).join('')}
+                </svg>
+                <p class="font-sans text-[11px] text-muted">Hover or tap any quarter above to inspect exact Bank Rate and CPI figures.</p>
+            </div>
+            `;
+        }
+
+        // --- 7. RENDER SINGLE DAILY ARTICLE & STRUCTURED SECTIONS ---
+        function renderDailyBriefing() {
+            const story = DAILY_STORY;
+
+            document.getElementById('article-headline').textContent = story.title;
+            const heroImg = document.getElementById('article-hero-image');
+            if (heroImg && story.heroImage) heroImg.src = story.heroImage;
+            document.getElementById('article-photo-caption').textContent = story.photoCaption;
+            document.getElementById('article-photo-credit').textContent = story.photoCredit;
+
+            // Render direct article prose with Economist drop-cap, pull quote, and Edexcel 9EC0 Spec Topics box below quote
+            const proseContainer = document.getElementById('lead-article-prose');
+            proseContainer.innerHTML = `
+                ${story.articleParagraphs.map((p, idx) => `<p class="${idx === 0 ? 'lead-dropcap' : ''}">${p}</p>`).join('')}
+                
+                <blockquote class="my-6 border-y border-rule py-3.5 px-2 sm:px-3">
+                    <p class="font-editorial italic text-[20px] text-ink leading-snug">
+                        ${story.pullQuote}
+                    </p>
+                </blockquote>
+
+                <!-- Relevant A-Level Economics (Edexcel 9EC0) Specification Topics -->
+                <div class="bg-surface border border-rule p-4">
+                    <span class="font-sans text-[10px] font-bold uppercase tracking-widest text-crimson block mb-2">
+                        Relevant A-Level Economics (Edexcel 9EC0) Specification Topics
+                    </span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                        ${story.specTopics.map(t => `
+                            <div class="font-sans text-xs text-ink flex items-baseline gap-2">
+                                <span class="font-bold text-crimson shrink-0">${t.code}</span>
+                                <span>${t.name}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            const activeQ = story.questionBank[selectedQuestionType] || story.questionBank['10-mark'];
+
+            // Conditional Graph Application section (Section 03, directly after 02 The Evidence and above 04 The Evaluation)
+            const graphSectionHTML = story.hasRelevantGraph ? `
+                <!-- 03. GRAPH APPLICATION (Conditional, Placed Between Evidence & Evaluation) -->
+                <section class="space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-ink pb-1">
+                        <div class="flex items-center gap-2">
+                            <span class="font-sans text-xs font-bold text-crimson">03</span>
+                            <h2 class="font-editorial text-xl font-bold text-ink">Graph Application</h2>
+                        </div>
+                        <div class="inline-flex border border-rule bg-surface font-sans text-[11px] font-bold">
+                            <button id="tab-chart-diagram" onclick="switchVisualTab('diagram')" class="px-2.5 py-1 bg-ink text-white cursor-pointer">AD / AS Simulator</button>
+                            <button id="tab-chart-data" onclick="switchVisualTab('data')" class="px-2.5 py-1 text-ink hover:bg-white cursor-pointer">Empirical Data</button>
+                        </div>
+                    </div>
+
+                    <div class="border border-rule bg-paper p-3.5 sm:p-4">
+                        <p class="font-editorial font-bold text-base text-ink mb-2.5">${story.chartTitle}</p>
+
+                        <div id="simulator-controls" class="bg-surface border border-rule p-3 mb-3 space-y-2.5">
+                            <div class="flex flex-wrap items-center justify-between gap-2.5">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <button id="btn-toggle-shock" onclick="toggleSupplyShock()"
+                                        class="font-sans text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 border border-ink bg-crimson text-white transition cursor-pointer">
+                                        1. Energy Shock (SRAS₁ &rarr; SRAS₂): ON
+                                    </button>
+                                    <button onclick="resetSimulator()"
+                                        class="font-sans text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 border border-rule bg-white text-ink hover:border-ink transition cursor-pointer">
+                                        Reset
+                                    </button>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <label for="bank-rate-slider" class="font-sans text-[10px] font-bold uppercase tracking-wider text-ink">
+                                        2. Bank Rate: <span id="slider-rate-display" class="text-crimson">4.00%</span>
+                                    </label>
+                                    <input id="bank-rate-slider" type="range" min="3.75" max="4.50" step="0.25" value="4.00"
+                                        oninput="updateBankRateSlider(this.value)"
+                                        class="w-24 sm:w-32 accent-crimson cursor-pointer">
+                                </div>
+                            </div>
+                            <div id="simulator-live-readout" class="economist-explainer text-[15px] bg-white border border-rule px-3 py-2"></div>
+                        </div>
+
+                        <div id="visual-svg-container" class="w-full overflow-x-auto"></div>
+                    </div>
+                </section>
+            ` : '';
+
+            const evalNum = story.hasRelevantGraph ? '04' : '03';
+            const appNum = story.hasRelevantGraph ? '05' : '04';
+            const opinionsNum = story.hasRelevantGraph ? '06' : '05';
+            const questionNum = story.hasRelevantGraph ? '07' : '06';
+
+            const bodyContainer = document.getElementById('structured-article-body');
+            bodyContainer.innerHTML = `
+                <!-- 01. THE ECONOMICS -->
+                <section class="space-y-3">
+                    <div class="flex items-center gap-2 border-b border-ink pb-1">
+                        <span class="font-sans text-xs font-bold text-crimson">01</span>
+                        <h2 class="font-editorial text-xl font-bold text-ink">The Economics</h2>
+                    </div>
+                    <p class="economist-explainer">
+                        ${story.economics.summary}
+                    </p>
+                    <div class="space-y-3">
+                        ${story.economics.points.map(pt => `
+                            <div class="bg-surface border border-rule p-4 space-y-1">
+                                <h3 class="font-editorial font-bold text-base text-ink">${pt.term}</h3>
+                                <p class="economist-explainer">${pt.desc}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <!-- 02. THE EVIDENCE -->
+                <section class="space-y-3">
+                    <div class="flex items-center gap-2 border-b border-ink pb-1">
+                        <span class="font-sans text-xs font-bold text-crimson">02</span>
+                        <h2 class="font-editorial text-xl font-bold text-ink">The Evidence</h2>
+                    </div>
+                    <p class="economist-explainer">${story.evidence.intro}</p>
+                    <div class="overflow-x-auto border border-rule">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-surface border-b border-ink font-sans text-[10.5px] font-bold uppercase tracking-wider text-ink">
+                                    <th class="py-2.5 px-3">Indicator</th>
+                                    <th class="py-2.5 px-3">Latest Reading</th>
+                                    <th class="py-2.5 px-3">Analytical Context</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-rule economist-explainer text-[15.5px]">
+                                ${story.evidence.table.map(row => `
+                                    <tr>
+                                        <td class="py-2.5 px-3 font-bold text-ink">${row.metric}</td>
+                                        <td class="py-2.5 px-3 font-sans text-xs font-bold text-crimson">${row.reading}</td>
+                                        <td class="py-2.5 px-3 text-neutral-800">${row.context}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                ${graphSectionHTML}
+
+                <!-- THE EVALUATION -->
+                <section class="space-y-3">
+                    <div class="flex items-center gap-2 border-b border-ink pb-1">
+                        <span class="font-sans text-xs font-bold text-crimson">${evalNum}</span>
+                        <h2 class="font-editorial text-xl font-bold text-ink">The Evaluation</h2>
+                    </div>
+                    <div class="space-y-3">
+                        ${story.evaluation.map((ev, i) => `
+                            <div class="border-l-2 border-ink pl-3.5 py-0.5">
+                                <h3 class="font-editorial font-bold text-base text-ink">${i + 1}. ${ev.title}</h3>
+                                <p class="economist-explainer mt-0.5">${ev.detail}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <!-- A-LEVEL APPLICATION -->
+                <section class="space-y-3">
+                    <div class="flex items-center gap-2 border-b border-ink pb-1">
+                        <span class="font-sans text-xs font-bold text-crimson">${appNum}</span>
+                        <h2 class="font-editorial text-xl font-bold text-ink">A-Level Application</h2>
+                    </div>
+                    <div class="bg-surface border border-rule p-4 space-y-3">
+                        <div>
+                            <span class="font-sans text-[10px] font-bold uppercase tracking-widest text-muted block">Edexcel 9EC0 Target Essay Question</span>
+                            <p class="economist-question font-bold mt-1">"${story.application.essayPrompt}"</p>
+                        </div>
+                        <div class="space-y-2 pt-2.5 border-t border-rule">
+                            <span class="font-sans text-[10px] font-bold uppercase tracking-widest text-ink block">Mark-Scheme Deployment Checklist</span>
+                            ${story.application.checklist.map((item, idx) => {
+                                const checked = !!checklistState[`${story.id}-${idx}`];
+                                return `
+                                <label class="flex items-start gap-2.5 p-2.5 bg-white border border-rule hover:border-ink transition cursor-pointer select-none">
+                                    <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleChecklist('${story.id}', ${idx})"
+                                        class="mt-1 accent-crimson cursor-pointer">
+                                    <div class="economist-explainer text-[15.5px]">
+                                        <span class="font-sans text-xs font-bold text-crimson mr-1.5">[${item.code}]</span>
+                                        <span class="${checked ? 'line-through text-muted' : 'text-ink'}">${item.label}</span>
+                                    </div>
+                                </label>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ECONOMIST OPINIONS (Moved Below A-Level Application, With Clickable ? Explaining Why It Helps Earn A* Grades) -->
+                <section class="bg-surface border border-rule p-4 sm:p-5 space-y-3">
+                    <div class="border-b border-ink pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="font-sans text-[10.5px] font-bold uppercase tracking-widest text-crimson">${opinionsNum} &middot; Economist Opinions</span>
+                            <button type="button" onclick="openOpinionsHelp(event)" aria-label="Why Economist Opinions are useful for A* grades"
+                                class="w-4 h-4 border border-ink bg-white text-ink hover:bg-crimson hover:text-white hover:border-crimson font-sans text-[10px] font-bold inline-flex items-center justify-center transition cursor-pointer">?</button>
+                        </div>
+                        <h2 class="font-editorial text-lg sm:text-xl font-bold text-ink leading-snug mt-1">
+                            ${story.opinionsHeadline}
+                        </h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${story.opinionsArgs.map(arg => `
+                            <div class="border-l-2 border-ink pl-3">
+                                <span class="font-editorial font-bold text-base text-ink block mb-1">${arg.stance}</span>
+                                <p class="economist-explainer text-[15.5px]">${arg.text}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <!-- DAILY PRACTICE QUESTION (Past Paper Question + Link + "Attempt another question?" Switcher) -->
+                <section id="practice-question-section" class="space-y-3.5">
+                    <div class="flex items-center justify-between border-b-2 border-ink pb-1">
+                        <div class="flex items-center gap-2">
+                            <span class="font-sans text-xs font-bold text-crimson">${questionNum}</span>
+                            <h2 class="font-editorial text-xl font-bold text-ink">Daily Practice Question</h2>
+                        </div>
+                        <button onclick="openTutorDrawer('${escapeQuotes(story.title)}', 'Help me structure an Edexcel 9EC0 answer to: ${escapeQuotes(activeQ.question)}')"
+                            class="font-sans text-[11px] font-bold uppercase tracking-wider text-crimson hover:underline cursor-pointer">
+                            Ask Examiner AI &rarr;
+                        </button>
+                    </div>
+
+                    <div class="border border-ink bg-white p-4 sm:p-5 space-y-3.5">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="font-sans text-[10px] font-bold uppercase tracking-widest bg-ink text-white px-2.5 py-0.5 inline-block">
+                                ${activeQ.label}
+                            </span>
+                            <a href="${activeQ.paperUrl}" target="_blank" rel="noopener noreferrer"
+                                class="font-sans text-[11px] font-bold text-crimson hover:underline">
+                                Source: ${activeQ.source} &nearr;
+                            </a>
+                        </div>
+
+                        <!-- Question in Exact Times New Roman Font -->
+                        <p class="economist-question font-bold">
+                            ${activeQ.question}
+                        </p>
+
+                        <textarea id="student-attempt-${story.id}" rows="4"
+                            placeholder="Write your Edexcel 9EC0 response here (include definitions, data from today's briefing, chains of reasoning, and evaluation)..."
+                            class="w-full bg-surface border border-rule focus:border-ink p-3 font-editorial text-[16px] text-ink placeholder-neutral-400 focus:outline-none"></textarea>
+
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <button onclick="gradeStudentAnswer('${story.id}')"
+                                class="bg-crimson hover:bg-crimson-dark text-white font-sans font-bold text-[11px] uppercase tracking-wider px-4 py-2 transition cursor-pointer">
+                                Submit Answer for AI Mark-Scheme Feedback
+                            </button>
+                            <button onclick="toggleMarkSchemeHint()"
+                                class="font-sans text-[11px] font-bold uppercase tracking-wider text-ink underline hover:text-crimson cursor-pointer">
+                                View Past-Paper Mark Scheme Notes
+                            </button>
+                        </div>
+
+                        <div id="past-paper-mark-hint" class="hidden bg-surface border border-rule p-3 economist-explainer text-[15px]">
+                            <strong class="font-sans text-[10px] uppercase tracking-wider text-crimson block mb-1">Edexcel 9EC0 Mark Scheme Guidance</strong>
+                            ${activeQ.markGuide}
+                        </div>
+
+                        <div id="ai-feedback-box-${story.id}" class="hidden mt-2.5 pt-2.5 border-t border-rule economist-explainer text-[15.5px] space-y-1.5"></div>
+
+                        <!-- Attempt Another Question? Choice Bar (10-Mark, 12-Mark, 25-Mark Essay, Quantitative Maths) -->
+                        <div class="pt-3.5 mt-3 border-t border-rule space-y-2">
+                            <span class="font-editorial font-bold text-base text-ink block">Attempt another question?</span>
+                            <p class="font-sans text-xs text-muted">Switch between Edexcel 9EC0 past-paper question formats linked to today's article:</p>
+                            <div class="flex flex-wrap gap-2 pt-0.5">
+                                <button type="button" onclick="selectPracticeQuestion('10-mark')"
+                                    class="font-sans text-xs font-bold px-3 py-1.5 border ${selectedQuestionType === '10-mark' ? 'bg-ink text-white border-ink' : 'bg-surface text-ink border-rule hover:border-ink'} transition cursor-pointer">
+                                    10-Mark Data Response
+                                </button>
+                                <button type="button" onclick="selectPracticeQuestion('12-mark')"
+                                    class="font-sans text-xs font-bold px-3 py-1.5 border ${selectedQuestionType === '12-mark' ? 'bg-ink text-white border-ink' : 'bg-surface text-ink border-rule hover:border-ink'} transition cursor-pointer">
+                                    12-Mark Analysis &amp; Eval
+                                </button>
+                                <button type="button" onclick="selectPracticeQuestion('25-mark')"
+                                    class="font-sans text-xs font-bold px-3 py-1.5 border ${selectedQuestionType === '25-mark' ? 'bg-ink text-white border-ink' : 'bg-surface text-ink border-rule hover:border-ink'} transition cursor-pointer">
+                                    25-Mark Extended Essay
+                                </button>
+                                <button type="button" onclick="selectPracticeQuestion('maths')"
+                                    class="font-sans text-xs font-bold px-3 py-1.5 border ${selectedQuestionType === 'maths' ? 'bg-crimson text-white border-crimson' : 'bg-surface text-ink border-rule hover:border-ink'} transition cursor-pointer">
+                                    Quantitative Skills (Maths)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `;
+
+            if (story.hasRelevantGraph) {
+                renderVisualGraphic();
+            }
+        }
+
+        // --- 8. INTERACTIVE ACTIONS ---
+        function selectPracticeQuestion(type) {
+            selectedQuestionType = type;
+            renderDailyBriefing();
+            const sec = document.getElementById('practice-question-section');
+            if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function toggleMarkSchemeHint() {
+            const el = document.getElementById('past-paper-mark-hint');
+            if (el) el.classList.toggle('hidden');
+        }
+
+        function toggleChecklist(storyId, idx) {
+            const key = `${storyId}-${idx}`;
+            checklistState[key] = !checklistState[key];
+            renderDailyBriefing();
+        }
+
+        function gradeStudentAnswer(storyId) {
+            const textarea = document.getElementById(`student-attempt-${storyId}`);
+            const box = document.getElementById(`ai-feedback-box-${storyId}`);
+            const text = (textarea?.value || '').trim();
+
+            box.classList.remove('hidden');
+
+            if (text.length < 20) {
+                box.innerHTML = `<p class="text-crimson font-bold">Please write a fuller response before submitting so Examiner AI can evaluate your chain of reasoning and Edexcel 9EC0 data application.</p>`;
+                return;
+            }
+
+            const hasData = /4\.00|3\.75|3\.5|65%|1\.1|5\.0|\$1\.27|6\.67|0\.50/.test(text);
+            const hasChain = /because|therefore|leads to|shifts|consequently|reduces|increases|resulting in|return/i.test(text);
+            const hasEval = /however|although|depends on|lag|short run|long run|on the other hand|limitation|whereas/i.test(text);
+
+            box.innerHTML = `
+                <div class="font-sans text-[10.5px] font-bold uppercase tracking-wider text-crimson">Examiner AI Mark-Scheme Diagnostic (Edexcel 9EC0)</div>
+                <ul class="space-y-1">
+                    <li><strong>AO2 Application:</strong> ${hasData ? 'Strong: you integrated empirical figures from today\'s briefing.' : 'Missing data: embed specific figures (such as 4.00% Bank Rate, 3.5% CPI, +65% gas futures, or 6.67%) to secure full AO2 credit.'}</li>
+                    <li><strong>AO3 Analytical Chain:</strong> ${hasChain ? 'Clear causal connectives detected.' : 'Use explicit causal links ("higher borrowing costs reduce C and I, shifting AD left").'}</li>
+                    <li><strong>AO4 Evaluation:</strong> ${hasEval ? 'Good: you introduced a counter-argument or time-lag caveat.' : 'Add an evaluative "However..." sentence weighing 18 to 24 month policy lags or stagflation risk.'}</li>
+                </ul>
+            `;
+        }
+
+        function handleSubscribeSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('subscribe-email-input');
+            const confirmBox = document.getElementById('subscribe-confirmation');
+            const email = (input?.value || '').trim();
+            if (!email) return;
+
+            confirmBox.classList.remove('hidden');
+            confirmBox.innerHTML = `<strong class="text-crimson font-sans font-bold uppercase text-[10.5px] tracking-wider mr-1.5">Subscribed:</strong> <strong>${email}</strong> is now registered to receive yesterday's Edexcel 9EC0 economic briefing, interactive diagram notes, and daily practice question every morning at <strong>6:00 AM</strong>.`;
+            input.value = '';
+        }
+
+        // --- 9. EXAMINER AI DRAWER LOGIC ---
+        function openTutorDrawer(topicTitle, initialPrompt) {
+            const label = topicTitle || DAILY_STORY.title;
+            document.getElementById('tutor-context-label').textContent = `Active Briefing: ${label}`;
+
+            if (chatHistory.length === 0) {
+                chatHistory.push({
+                    role: 'ai',
+                    text: `Welcome to Examiner AI. We are currently reviewing <strong>"${DAILY_STORY.title}"</strong> for Edexcel A-Level Economics (9EC0). Ask me to clarify any concept, sketch out an AD/AS diagram, or structure an AO1 to AO4 essay paragraph.`
+                });
+            }
+
+            renderChatMessages();
+            document.getElementById('tutor-backdrop').classList.remove('hidden');
+            document.getElementById('tutor-drawer').classList.remove('translate-x-full');
+
+            if (initialPrompt) {
+                sendQuickPrompt(initialPrompt);
+            }
+        }
+
+        function closeTutorDrawer() {
+            document.getElementById('tutor-backdrop').classList.add('hidden');
+            document.getElementById('tutor-drawer').classList.add('translate-x-full');
+        }
+
+        function renderChatMessages() {
+            const container = document.getElementById('tutor-messages');
+            container.innerHTML = chatHistory.map(msg => {
+                if (msg.role === 'user') {
+                    return `
+                    <div class="bg-ink text-white p-3.5 ml-8 economist-explainer text-white">
+                        <span class="font-sans text-[9.5px] font-bold uppercase tracking-wider text-neutral-400 block mb-0.5">Student</span>
+                        ${msg.text}
+                    </div>`;
+                }
+                return `
+                <div class="bg-surface border border-rule p-3.5 mr-4 economist-explainer text-ink">
+                    <span class="font-sans text-[9.5px] font-bold uppercase tracking-wider text-crimson block mb-0.5">Examiner AI</span>
+                    <div class="space-y-2">${msg.text}</div>
+                </div>`;
+            }).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendQuickPrompt(promptText) {
+            chatHistory.push({ role: 'user', text: promptText });
+            renderChatMessages();
+            setTimeout(() => {
+                const reply = generateExaminerReply(promptText);
+                chatHistory.push({ role: 'ai', text: reply });
+                renderChatMessages();
+            }, 220);
+        }
+
+        function handleChatSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('tutor-input');
+            const val = input.value.trim();
+            if (!val) return;
+            input.value = '';
+            sendQuickPrompt(val);
+        }
+
+        function generateExaminerReply(query) {
+            const q = query.toLowerCase();
+
+            for (const [_, entry] of Object.entries(JARGON_DICT)) {
+                if (q.includes(entry.term.toLowerCase()) || q.includes(entry.term.split(' ')[0].toLowerCase() + ' ')) {
+                    return `<p><strong>${entry.term}:</strong> ${entry.definition}</p><p><em>${entry.examTip}</em></p>`;
+                }
+            }
+
+            if (q.includes('transmission') || q.includes('rate')) {
+                return `<p><strong>Monetary Transmission Mechanism (4.00% Bank Rate):</strong></p>
+                <p>1. <strong>Borrowing and Saving Channel:</strong> Commercial banks raise variable mortgage and business loan rates, reducing discretionary Consumption (C) and Investment (I).</p>
+                <p>2. <strong>Exchange Rate Channel:</strong> Higher UK interest rates attract hot-money inflows, supporting Sterling near $1.27 and lowering imported energy prices.</p>
+                <p><strong>Exam Chain:</strong> Lower C + I + (X - M) shifts AD left, easing demand-pull pressure and cooling second-round wage demands.</p>`;
+            }
+            if (q.includes('diagram') || q.includes('ad/as') || q.includes('draw')) {
+                return `<p><strong>How to Draw the Diagram for "${DAILY_STORY.title}":</strong></p>
+                <p>1. Label axes <strong>Price Level (PL)</strong> and <strong>Real GDP (Y)</strong>, with vertical LRAS and downward-sloping AD₁.</p>
+                <p>2. Show the +65% gas shock by shifting <strong>SRAS₁ left to SRAS₂</strong> (equilibrium moves from P₁, Y₁ to higher P₂ and lower Y₂, showing stagflation).</p>
+                <p>3. Show the MPC's 4.00% hike by shifting <strong>AD₁ left to AD₂</strong>, curbing second-round inflation at the cost of a wider negative output gap.</p>`;
+            }
+            if (q.includes('eval') || q.includes('ao4') || q.includes('25')) {
+                return `<p><strong>High-Scoring Edexcel 9EC0 AO4 Evaluation Points:</strong></p>
+                <p><strong>1. Time Lags:</strong> Monetary policy takes 18 to 24 months to peak due to fixed-rate mortgages, meaning it cannot stop the Q2 2027 CPI peak (~5.0%).</p>
+                <p><strong>2. Policy Conflict:</strong> Tightening AD when OBR GDP growth is just 1.1% risks deepening a downturn when the root inflation driver is an imported supply shock.</p>`;
+            }
+            return `<p>In the context of <strong>"${DAILY_STORY.title}"</strong> (Edexcel 9EC0), anchor your paragraph with three steps:</p>
+            <p><strong>1. Define (AO1):</strong> Precisely define the core mechanism (such as cost-push inflation or monetary transmission).</p>
+            <p><strong>2. Apply Data (AO2):</strong> Cite the 4.00% Bank Rate, 3.5% CPI, +65% gas futures, or 1.1% GDP forecast.</p>
+            <p><strong>3. Evaluate (AO4):</strong> Weigh short-run supply shocks against 18 to 24 month policy lags.</p>`;
+        }
+
+        // --- 10. FIRST-VISIT DISCLAIMER MODAL CONTROLS ---
+        function openDisclaimerModal() {
+            document.getElementById('disclaimer-modal').classList.remove('hidden');
+        }
+
+        function acceptDisclaimerModal() {
+            try {
+                localStorage.setItem('nh_econ_disclaimer_accepted_v2', 'true');
+            } catch (e) {}
+            document.getElementById('disclaimer-modal').classList.add('hidden');
+        }
+
+        // --- INITIALISE ---
+        window.addEventListener('DOMContentLoaded', () => {
+            trackTotalUsers();
+            renderDailyBriefing();
+            renderGlossaryBank();
+            try {
+                if (!localStorage.getItem('nh_econ_disclaimer_accepted_v2')) {
+                    openDisclaimerModal();
+                }
+            } catch (e) {
+                openDisclaimerModal();
+            }
+            loadLatestFromSupabase();
+        });
+
+        // --- 11. LIVE SUPABASE CONNECTION (6:00 AM Daily Briefing & Subscribers) ---
+        const SUPABASE_URL = 'https://poekzgjhyifkngxeiqmc.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_V5zP6ieoKIObnZapfRFOsw_GQyJFDJd';
+
+        async function loadLatestFromSupabase() {
+            if (!SUPABASE_ANON_KEY.startsWith('sb_')) return;
+            try {
+                // 1. Fetch today's 6:00 AM briefing
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/daily_briefings?select=*&order=published_date.desc&limit=1`, {
+                    headers: {
+                        apikey: SUPABASE_ANON_KEY,
+                        Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                const rows = await res.json();
+                if (rows && rows[0]) {
+                    Object.assign(DAILY_STORY, rows[0].story_json);
+                    if (rows[0].jargon_json) Object.assign(JARGON_DICT, rows[0].jargon_json);
+                    renderDailyBriefing();
+                    renderGlossaryBank();
+                }
+
+                // 2. Sync global reader counter
+                const statRes = await fetch(`${SUPABASE_URL}/rest/v1/site_stats?id=eq.1&select=total_readers`, {
+                    headers: {
+                        apikey: SUPABASE_ANON_KEY,
+                        Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                const statRows = await statRes.json();
+                if (statRows && statRows[0]) {
+                    let count = Number(statRows[0].total_readers) || 0;
+                    if (!sessionStorage.getItem('nh_global_counted')) {
+                        count += 1;
+                        sessionStorage.setItem('nh_global_counted', 'true');
+                        await fetch(`${SUPABASE_URL}/rest/v1/site_stats?id=eq.1`, {
+                            method: 'PATCH',
+                            headers: {
+                                apikey: SUPABASE_ANON_KEY,
+                                Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ total_readers: count })
+                        });
+                    }
+                    const counterEl = document.getElementById('total-users-counter');
+                    if (counterEl) counterEl.textContent = `Total Readers: ${count.toLocaleString()}`;
+                }
+            } catch (err) {
+                console.warn('Using local fallback briefing:', err);
+            }
+        }
+
+        // Save email subscribers directly to Supabase for the 6:00 AM dispatch
+        const _originalSubscribe = handleSubscribeSubmit;
+        handleSubscribeSubmit = async function(e) {
+            e.preventDefault();
+            const input = document.getElementById('subscribe-email-input');
+            const email = (input?.value || '').trim();
+            if (!email) return;
+
+            if (SUPABASE_ANON_KEY.startsWith('sb_')) {
+                await fetch(`${SUPABASE_URL}/rest/v1/subscribers`, {
+                    method: 'POST',
+                    headers: {
+                        apikey: SUPABASE_ANON_KEY,
+                        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        Prefer: 'return=minimal'
+                    },
+                    body: JSON.stringify({ email })
+                });
+            }
+            input.value = email;
+            _originalSubscribe(e);
+        };
+    </script>
+</body>
+</html>
